@@ -5,6 +5,8 @@ import textwrap
 import datetime
 import barcode
 from barcode.writer import ImageWriter
+import re
+
 
 ls = (
     "img\\Inspector.jpg",  # 0
@@ -55,8 +57,7 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
 
     # converts the pdf to a string
     text = ""
-    page = pdfReader.pages[0]
-    text = page.extract_text()
+    text = pdfReader.pages[0].extract_text() + pdfReader.pages[1].extract_text() + pdfReader.pages[2].extract_text()
     pdfFile.close()
 
     text = text.split("\n")  # divides the srting
@@ -66,11 +67,34 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     part = text[text.index("Part:") + 1]
     date = text[text.index("Due\xa0Date:") + 1]
 
+    quantityIndex = text.index("For Order")
+    for i in range(quantityIndex, quantityIndex+10):
+        try:
+            if float(text[i]) > 1:
+                quantity = float(text[i])
+                break
+        except:
+            print()
+    boxIndex = 0
+    for i in range(0, len(text)):
+        if(text[i].find("CORRUGATED") != -1):
+            boxIndex = i
+            break
+        if(text[i].find("KRAFT") != -1):
+            boxIndex = i
+            break
+
+    for i in range(boxIndex, boxIndex+10):
+        if re.match("^-?\d*\.?\d+$", text[i]):
+            quantity = round(quantity / float(text[i]))
+            break
+
     descriptionIndex = text.index("Description:")
     description = text[descriptionIndex + 1]
     if text[descriptionIndex + 2] != "Asm:":
         description += text[descriptionIndex + 2]
 
+    text = text[text.index("RAW MATERIAL COMPONENTS:"):]
     shipping = []
     if "SHIPPING SCHEDULE:" in text:  # checks if there are shipping schedules
         startIndex = text.index("SHIPPING SCHEDULE:")
@@ -88,6 +112,8 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
                     }
                 )
 
+    
+
     # makes a dictionary with all the relevant data and returns it
     data = {
         "job": job,
@@ -95,6 +121,7 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
         "part": part,
         "description": description,
         "shipping": shipping,
+        "quantity": quantity
     }
     return data
 
