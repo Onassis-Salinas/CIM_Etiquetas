@@ -9,23 +9,23 @@ import re
 
 
 ls = (
-    "img\\Inspector.jpg",  # 0
-    "img\\Bastones.jpg",  # 1
-    "img\\Codigo Yamaha.jpg",  # 2
-    "img\\Codigo Kawasaki.jpg",  # 3
-    "img\\Codigo Polaris.jpg",  # 4
-    "img\\Codigo Chaparral.jpg",  # 5
-    "img\\Warning.jpg",  # 6
-    "img\\Cantidad.jpg",  # 7
-    "img\\Informacion.jpg",  # 8
-    "img\\Cantidad Kawasaki.jpg",  # 9
-    "img\\Master Polaris.jpg",  # 10
-    "img\\Yamaha Info.jpg",  # 11
-    "img\\Yamaha Info2.jpg",  # 12
-    "img\\Commercial.jpg",  # 13
-    "img\\Outer Armor.jpg",  # 14
-    "img\\Kawasaki.jpg",  # 15
-    "img\\Yamaha.jpg",  # 16
+    ["img\\Inspector.jpg", 2],  # 0
+    ["img\\Bastones.jpg", 2],  # 1
+    ["img\\Codigo Yamaha.jpg", 1],  # 2
+    ["img\\Codigo Kawasaki.jpg", 1],  # 3
+    ["img\\Codigo Polaris.jpg", 1],  # 4
+    ["img\\Codigo Chaparral.jpg", 1],  # 5
+    ["img\\Warning.jpg", 1],  # 6
+    ["img\\Cantidad.jpg", 1],  # 7
+    ["img\\Informacion.jpg", 0.5],  # 8
+    ["img\\Cantidad Kawasaki.jpg", 1],  # 9
+    ["img\\Master Polaris.jpg", 1],  # 10
+    ["img\\Yamaha Info.jpg", 5],  # 11
+    ["img\\Yamaha Info2.jpg", 5],  # 12
+    ["img\\Commercial.jpg", 2],  # 13
+    ["img\\Outer Armor.jpg", 2],  # 14
+    ["img\\Kawasaki.jpg", 2],  # 15
+    ["img\\Yamaha.jpg", 2],  # 16
 )
 
 bcd = (
@@ -67,26 +67,26 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     part = text[text.index("Part:") + 1]
     date = text[text.index("Due\xa0Date:") + 1]
 
-    quantityIndex = text.index("For Order")
-    for i in range(quantityIndex, quantityIndex+10):
+    amountIndex = text.index("For Order")
+    for i in range(amountIndex, amountIndex + 10):
         try:
-            if float(text[i]) > 1:
-                quantity = float(text[i])
+            if float(text[i].replace(",", "")) > 1:
+                amount = float(text[i].replace(",", ""))
                 break
         except:
             print()
     boxIndex = 0
     for i in range(0, len(text)):
-        if(text[i].find("CORRUGATED") != -1):
+        if text[i].find("CORRUGATED") != -1:
             boxIndex = i
             break
-        if(text[i].find("KRAFT") != -1):
+        if text[i].find("KRAFT") != -1:
             boxIndex = i
             break
 
-    for i in range(boxIndex, boxIndex+10):
+    for i in range(boxIndex, boxIndex + 10):
         if re.match("^-?\d*\.?\d+$", text[i]):
-            quantity = round(quantity / float(text[i]))
+            quantity = round(amount / float(text[i]))
             break
 
     descriptionIndex = text.index("Description:")
@@ -94,13 +94,11 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     if text[descriptionIndex + 2] != "Asm:":
         description += text[descriptionIndex + 2]
 
-    text = text[text.index("RAW MATERIAL COMPONENTS:"):]
+    text = text[text.index("RAW MATERIAL COMPONENTS:") :]
     shipping = []
     if "SHIPPING SCHEDULE:" in text:  # checks if there are shipping schedules
         startIndex = text.index("SHIPPING SCHEDULE:")
-        for i in range(
-            startIndex, len(text)
-        ):  # if there are, it makes a dictionary for each shipping
+        for i in range(startIndex, len(text)):  # if there are, it makes a dictionary for each shipping
             if text[i].count("/") == 2 and len(text[i]) < 11:
                 poNumber = 11 if containsNumbers(text[i + 11]) else 10
 
@@ -112,24 +110,13 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
                     }
                 )
 
-    
-
     # makes a dictionary with all the relevant data and returns it
-    data = {
-        "job": job,
-        "date": date,
-        "part": part,
-        "description": description,
-        "shipping": shipping,
-        "quantity": quantity
-    }
+    data = {"job": job, "date": date, "part": part, "description": description, "shipping": shipping, "quantity": quantity, "amount": amount}
     return data
 
 
 def openFileDialog():  # opens the file browser
-    filePath = filedialog.askopenfile(
-        filetypes=[("PDF files", "*.pdf")], title="Selecciona el Job"
-    ).name
+    filePath = filedialog.askopenfile(filetypes=[("PDF files", "*.pdf")], title="Selecciona el Job").name
     return filePath
 
 
@@ -144,27 +131,27 @@ def getLabels(part):
     usedLabels = []
     if part[0] == "F":
         usedLabels = [ls[0], ls[1], ls[2], ls[6], ls[7], ls[8], ls[16]]
-    if part[0] == "P":
+    elif part[0] == "P":
         usedLabels = [ls[7], ls[16]]
-    if part[0] == "4":
+    elif part[0] == "4":
         usedLabels = [ls[0], ls[1], ls[4], ls[6], ls[7], ls[8], ls[14]]
-    if part[:3] == "MWV":
+    elif part[:3] == "MWV":
         usedLabels = [ls[2], ls[7], ls[16]]
-    if part[:3] == "MAR":
+    elif part[:3] == "MAR":
         usedLabels = [ls[2], ls[7], ls[11], ls[12]]
-    if part[:2] == "18":
+    elif part[:2] == "18":
         usedLabels = [ls[5], ls[7], ls[16]]
-    if part[:4] == "DJBC":
+    elif part[:4] == "DJBC":
         usedLabels = [ls[7], ls[8], ls[14]]
-    if part[:2] == "MB":
+    elif part[:2] == "MB":
         usedLabels = [ls[7], ls[8], ls[14]]
-    if part[:3] == "SAN":
+    elif part[:3] == "SAN":
         usedLabels = [ls[7], ls[8], ls[14]]
-    if part[:2] == "ST":
+    elif part[:2] == "ST":
         usedLabels = [ls[7], ls[14]]
-    if part[:2] == "28":
+    elif part[:2] == "28":
         usedLabels = [ls[4], ls[10], ls[13]]
-    if part[0] == "W" or part[0] == "9":
+    elif part[0] == "W" or part[0] == "9":
         usedLabels = [ls[3], ls[9], ls[15]]
 
     return usedLabels
@@ -217,9 +204,7 @@ def PrintLabel(check, jobInfo, label):
             jobInfo["shipping"]["purchaseOrder"],
         )
     if label == ls[8]:
-        makeInformacion(
-            jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"]
-        )
+        makeInformacion(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
     if label == ls[9]:
         makeCantidadKawasaki(jobInfo["job"])
     if label == ls[10]:
@@ -229,21 +214,13 @@ def PrintLabel(check, jobInfo, label):
     if label == ls[12]:
         makeYamahaInfo2(jobInfo["job"])
     if label == ls[13]:
-        makeCommercial(
-            jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"]
-        )
+        makeCommercial(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
     if label == ls[14]:
-        makeOuterArmor(
-            jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"]
-        )
+        makeOuterArmor(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
     if label == ls[15]:
-        makeKawasaki(
-            jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"]
-        )
+        makeKawasaki(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
     if label == ls[16]:
-        makeYamaha(
-            jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"]
-        )
+        makeYamaha(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
 
 
 # Functions for making the pictures
@@ -269,12 +246,8 @@ def makeBastones(job):
 
 def makeCodigoYamaha(part, description, date):
     image = Image.open(ls[2])
-    barcode.Code39(
-        part.replace("-", ""), writer=ImageWriter(), add_checksum=False
-    ).save(bcd[0][:-4], options={"write_text": False})
-    barcode.Code39("1", writer=ImageWriter(), add_checksum=False).save(
-        bcd[1][:-4], options={"write_text": False}
-    )
+    barcode.Code39(part.replace("-", ""), writer=ImageWriter(), add_checksum=False).save(bcd[0][:-4], options={"write_text": False})
+    barcode.Code39("1", writer=ImageWriter(), add_checksum=False).save(bcd[1][:-4], options={"write_text": False})
 
     barcode1 = Image.open(bcd[0])
     barcode1 = barcode1.resize((550, 130))
@@ -349,9 +322,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         partWidth = draw.textsize(part, font=partFont)[0]
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(
-            description, width=1200 // descriptionFont.getsize("A")[0]
-        )
+        lines = textwrap.wrap(description, width=1200 // descriptionFont.getsize("A")[0])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -382,9 +353,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         partWidth = draw.textsize(part, font=partFont)[0]
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(
-            description, width=1200 // descriptionFont.getsize("A")[0]
-        )
+        lines = textwrap.wrap(description, width=1200 // descriptionFont.getsize("A")[0])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -398,9 +367,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         draw.text((x[5], y[5]), so, font=orderFont, fill=(0, 0, 0))
         draw.text((x[6], y[6]), po, font=orderFont, fill=(0, 0, 0))
 
-        barcode.Code39(
-        part.replace("-", ""), writer=ImageWriter(), add_checksum=False
-        ).save(bcd[2][:-4], options={"write_text": False})
+        barcode.Code39(part.replace("-", ""), writer=ImageWriter(), add_checksum=False).save(bcd[2][:-4], options={"write_text": False})
         x[7] = (image.width - 600) / 2
         barcode1 = Image.open(bcd[2])
         barcode1 = barcode1.resize((600, 100))
@@ -467,9 +434,7 @@ def makeCommercial(job, part, description, date):
         if i == 1:
             y = sumArray(y, 678)
 
-        lines = textwrap.wrap(
-            description, width=1000 // descriptionFont.getsize("A")[0]
-        )
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[0])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))
@@ -497,9 +462,7 @@ def makeOuterArmor(job, part, description, date):
         if i == 1:
             y = sumArray(y, 753)
 
-        lines = textwrap.wrap(
-            description, width=1000 // descriptionFont.getsize("A")[0]
-        )
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[0])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))
@@ -527,9 +490,7 @@ def makeKawasaki(job, part, description, date):
         if i == 1:
             y = sumArray(y, 622)
 
-        lines = textwrap.wrap(
-            description, width=1000 // descriptionFont.getsize("A")[0]
-        )
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[0])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))

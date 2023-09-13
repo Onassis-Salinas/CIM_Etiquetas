@@ -1,8 +1,10 @@
-from customtkinter import *
 from functools import partial
+from customtkinter import *
 from functions import *
+from math import ceil
 import copy
 import os
+
 
 class App(CTk):
     def __init__(self):
@@ -35,33 +37,32 @@ class App(CTk):
         jobInfoAct["shipping"] = []
         jobInfoAct = getShippingData(jobInfo=jobInfo, jobInfoAct=jobInfoAct)
         labels = getLabels(jobInfo["part"])
-        print(jobInfo)
-        print(jobInfoAct)
-        print(labels)
 
         # Containers
         self.tabview.add(jobInfoAct["job"])
-        
+
         self.dataFrame = CTkFrame(self.tabview.tab(jobInfoAct["job"]), bg_color="transparent", fg_color="transparent")
         self.dataFrame.pack()
         self.labelsFrame = CTkFrame(self.tabview.tab(jobInfoAct["job"]), bg_color="transparent", fg_color="transparent")
         self.labelsFrame.pack()
 
-        #purchase orders
+        # purchase orders
         for i, ship in enumerate(jobInfo["shipping"]):
-            shipButton = CTkButton(self.dataFrame, text=f"Pedido {i+1}", width=8, bg_color="transparent", command=partial(getShippingData, jobInfo, jobInfoAct, i)).grid(row=i+1, column=6)
+            shipButton = CTkButton(self.dataFrame, text=f"Pedido {i+1}", width=8, bg_color="transparent", command=partial(getShippingData, jobInfo, jobInfoAct, i)).grid(row=i + 1, column=6)
 
         self.quantity = CTkEntry(self.dataFrame, bg_color="transparent")
         self.quantity.insert(0, str(jobInfoAct["quantity"]))
         self.quantity.grid(row=1, column=1, padx=5, pady=5)
 
         # Buttons for labels
-        for i, label, in enumerate(labels):
-            self.labelText = label.replace("img\\", "")
+        for i, label in enumerate(labels):
+            self.labelText = label[0].replace("img\\", "")
             self.labelText = self.labelText.replace(".jpg", "")
+            amount = ceil(jobInfoAct["amount"] / label[1])
 
-            self.label1 = CTkLabel(self.labelsFrame,bg_color="transparent", text=self.labelText, width=14).grid(row=2, column=i)
-            self.printButton = CTkButton(self.labelsFrame, text="Imprimir",bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4, column=i, padx=5, pady=5)
+            self.label1 = CTkLabel(self.labelsFrame, bg_color="transparent", text=self.labelText, width=14).grid(row=2, column=i)
+            self.printButton = CTkButton(self.labelsFrame, text=str(amount), bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4, column=i, padx=5, pady=5)
+
 
 app = App()
 app.mainloop()
