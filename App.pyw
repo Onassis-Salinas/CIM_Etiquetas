@@ -1,7 +1,7 @@
 from functools import partial
 from customtkinter import *
 from functions import *
-from math import ceil
+from math import ceil, floor
 import copy
 import os
 
@@ -59,9 +59,10 @@ class App(CTk):
             self.labelText = label[0].replace("img\\", "")
             self.labelText = self.labelText.replace(".jpg", "")
             amount = ceil(jobInfoAct["amount"] / label[1])
+            buttonText = (ceil((10 - len(str(amount))) / 2) * " ") + str(amount) + (floor((10 - len(str(amount))) / 2) * " ")
 
             self.label1 = CTkLabel(self.labelsFrame, bg_color="transparent", text=self.labelText, width=14).grid(row=2, column=i)
-            self.printButton = CTkButton(self.labelsFrame, text=str(amount), bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4, column=i, padx=5, pady=5)
+            self.printButton = CTkButton(self.labelsFrame, text=buttonText, bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4, column=i, padx=5, pady=5)
 
 
 app = App()
