@@ -4,6 +4,7 @@ import datetime
 import barcode
 import textwrap
 from functions import *
+import os
 
 ls = (
     ["img\\Inspector.jpg", 2],  # 0
@@ -63,11 +64,36 @@ def convertDate2(date):
     return "Y" + formatted_date + "Z"
 
 
+def openImage(image):
+    directory = os.getcwd() + "\\labels"
+
+    for file in os.listdir(directory):
+        ruta_file = os.path.join(directory, file)
+        fecha_creacion = datetime.datetime.fromtimestamp(os.path.getctime(ruta_file))
+        diferencia = datetime.datetime.now() - fecha_creacion
+        umbral = datetime.timedelta(hours=10)
+
+        if diferencia > umbral:
+            os.remove(ruta_file)
+
+
+    for i in range(200):
+        # print(os.path.exists(os.getcwd() +  f"\\labels\\imagefile{i}.jpg"))
+        # print(os.getcwd() +  f"\\labels\\imagefile{i}.jpg")
+        # print(os.path.exists(os.getcwd()))
+        if os.path.exists(os.getcwd() +  f"\\labels\\imagefile{i}.jpg"):
+            pass
+        else:
+            image.save(f"labels\\imagefile{i}.jpg")
+            os.startfile(f"labels\\imagefile{i}.jpg")
+            break
+
+
 # ---------------------------------------------------------------------------------
 # Functions for making the pictures
 def makeInspector():
     image = Image.open("img\\Inspector.jpg")
-    return image.show()
+    return openImage(image)
 
 
 def makeBastones(job):
@@ -82,7 +108,7 @@ def makeBastones(job):
     draw.text((x[0], y[0]), job, font=font, fill=(0, 0, 0))
     draw.text((x[1], y[1]), job, font=font, fill=(0, 0, 0))
 
-    return image.show()
+    return openImage(image)
 
 
 def makeCodigoYamaha(part, description, date):
@@ -126,7 +152,7 @@ def makeCodigoYamaha(part, description, date):
         font=madeFont,
         fill=(0, 0, 0),
     )
-    return image.show()
+    return openImage(image)
 
 
 def makeCodigoKawasaki():
@@ -143,7 +169,7 @@ def makeCodigoChaparral():
 
 def makeWarning():
     image = Image.open("img\\Warning.jpg")
-    return image.show()
+    return openImage(image)
 
 
 def makeCantidad(job, part, description, date, quantity, so, po):
@@ -177,7 +203,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         draw.text((x[5], y[5]), so, font=orderFont, fill=(0, 0, 0))
         draw.text((x[6], y[6]), po, font=orderFont, fill=(0, 0, 0))
 
-        return image.show()
+        return openImage(image)
     else:
         image = Image.open("img\\Cantidad.jpg")
         draw = ImageDraw.Draw(image)
@@ -214,7 +240,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         barcode1 = barcode1.resize((600, 100))
         image.paste(barcode1, (int(x[7]), int(y[7])))
 
-        return image.show()
+        return openImage(image)
 
 
 def makeInformacion(job, part, description, date):
@@ -240,7 +266,8 @@ def makeInformacion(job, part, description, date):
     draw.text((x[0], y[0]), job, font=font, fill=(0, 0, 0))
     draw.text((x[1], y[1]), part, font=bold, fill=(0, 0, 0))
     draw.text((x[3], y[3]), date, font=font, fill=(0, 0, 0))
-    return image.show()
+    image.show()
+    # return openImage(image)
 
 
 def makeCantidadKawasaki():
@@ -292,7 +319,7 @@ def makeCommercial(job, part, description, date):
         draw.text((x[1], y[1]), part, font=partFont, fill=(0, 0, 0))
         draw.text((x[3], y[3]), (date), font=dateFont, fill=(0, 0, 0))
 
-    return image.show()
+    return openImage(image)
 
 
 def makeOuterArmor(job, part, description, date):
@@ -320,7 +347,7 @@ def makeOuterArmor(job, part, description, date):
         draw.text((x[1], y[1]), part, font=partFont, fill=(0, 0, 0))
         draw.text((x[3], y[3]), (date), font=dateFont, fill=(0, 0, 0))
 
-    return image.show()
+    return openImage(image)
 
 
 def makeKawasaki(job, part, description, date):
@@ -348,7 +375,7 @@ def makeKawasaki(job, part, description, date):
         draw.text((x[1], y[1]), part, font=partFont, fill=(0, 0, 0))
         draw.text((x[3], y[3]), (date), font=dateFont, fill=(0, 0, 0))
 
-    return image.show()
+    return openImage(image)
 
 
 def makeYamaha(job, part, description, date):
@@ -376,4 +403,4 @@ def makeYamaha(job, part, description, date):
         draw.text((x[1], y[1]), part, font=bold, fill=(0, 0, 0))
         draw.text((x[3], y[3]), ("CS  " + date), font=bold1, fill=(0, 0, 0))
 
-    return image.show()
+    return openImage(image)

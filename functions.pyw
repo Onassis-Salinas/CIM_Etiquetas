@@ -51,10 +51,13 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
             boxIndex = i
             break
 
-    for i in range(boxIndex, boxIndex + 10):
-        if re.match("^-?\d*\.?\d+$", text[i]):
-            quantity = round(amount / float(text[i]))
-            break
+    if boxIndex != 0:
+        for i in range(boxIndex, boxIndex + 10):
+            if re.match("^-?\d*\.?\d+$", text[i]):
+                quantity = round(amount / float(text[i]))
+                break
+    else:
+        quantity = 0
 
     descriptionIndex = text.index("Description:")
     description = text[descriptionIndex + 1]
