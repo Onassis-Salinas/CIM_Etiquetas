@@ -134,7 +134,7 @@ def PrintLabel(check, jobInfo, label):
     if label == ls[1]:
         makeBastones(jobInfo["job"])
     if label == ls[2]:
-        makeCodigoYamaha(jobInfo["part"], jobInfo["description"], jobInfo["date"])
+        makeCodigoYamaha(jobInfo["part"], jobInfo["description"], jobInfo["date"], jobInfo["job"])
     if label == ls[3]:
         makeCodigoKawasaki(jobInfo["job"])
     if label == ls[4]:

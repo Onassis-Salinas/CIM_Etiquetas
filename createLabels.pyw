@@ -76,12 +76,11 @@ def openImage(image):
         if diferencia > umbral:
             os.remove(ruta_file)
 
-
     for i in range(200):
         # print(os.path.exists(os.getcwd() +  f"\\labels\\imagefile{i}.jpg"))
         # print(os.getcwd() +  f"\\labels\\imagefile{i}.jpg")
         # print(os.path.exists(os.getcwd()))
-        if os.path.exists(os.getcwd() +  f"\\labels\\imagefile{i}.jpg"):
+        if os.path.exists(os.getcwd() + f"\\labels\\imagefile{i}.jpg"):
             pass
         else:
             image.save(f"labels\\imagefile{i}.jpg")
@@ -111,7 +110,7 @@ def makeBastones(job):
     return openImage(image)
 
 
-def makeCodigoYamaha(part, description, date):
+def makeCodigoYamaha(part, description, date, job):
     image = Image.open(ls[2][0])
     barcode.Code39(part.replace("-", ""), writer=ImageWriter(), add_checksum=False).save(bcd[0][:-4], options={"write_text": False})
     barcode.Code39("1", writer=ImageWriter(), add_checksum=False).save(bcd[1][:-4], options={"write_text": False})
@@ -130,9 +129,10 @@ def makeCodigoYamaha(part, description, date):
     descriptionFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 23)
     dateFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 30)
     madeFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 25)
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 25)
 
-    x = [520, 570, 550, 595, 200]
-    y = [45, 245, 105, 127, 360]
+    x = [520, 570, 550, 595, 200, 70]
+    y = [45, 245, 105, 127, 360, 360]
 
     draw.text((x[0], y[0]), part, font=partFont, fill=(0, 0, 0))
 
@@ -144,6 +144,7 @@ def makeCodigoYamaha(part, description, date):
 
     draw.text((x[2], y[2]), date, font=dateFont, fill=(0, 0, 0))
     draw.text((x[3], y[3]), "1 PC.", font=partFont, fill=(0, 0, 0))
+    draw.text((x[5], y[5]), job, font=jobFont, fill=(0, 0, 0))
 
     width = draw.textsize("MADE IN MEXICO", font=madeFont)[0]
     draw.text(
