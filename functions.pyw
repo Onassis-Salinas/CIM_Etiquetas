@@ -5,17 +5,6 @@ import re
 ls = getLs()  # obtains the labels from createLabels.pyw
 
 
-def getShippingData(jobInfo, jobInfoAct, number=None):
-    if number == None:
-        if jobInfo["shipping"] == []:
-            jobInfoAct["shipping"] = {"saleOrder": "", "purchaseOrder": ""}
-        else:
-            jobInfoAct["shipping"] = jobInfo["shipping"][0]
-    else:
-        jobInfoAct["shipping"] = jobInfo["shipping"][number]
-    return jobInfoAct
-
-
 def getJobData(pdfPath):  # receives a pdf and return the relevant data
     # opens the pdf
     pdfFile = open(pdfPath, "rb")
@@ -64,15 +53,12 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
         description += text[descriptionIndex + 2]
 
     shipping = []
-    print(text)
     if "SHIPPING SCHEDULE:" in text:  # checks if there are shipping schedules
         text = text[text.index("SHIPPING SCHEDULE:") : text.index("RAW MATERIAL COMPONENTS:")]
 
         startIndex = text.index("SHIPPING SCHEDULE:")
         for i in range(startIndex, len(text)):  # if there are, it makes a dictionary for each shipping
             if text[i].count("/") == 2 and len(text[i]) < 11:
-                print(text[i])
-
                 poNumber = 11 if containsNumbers(text[i + 11]) else 10
 
                 shipping.append(

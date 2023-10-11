@@ -77,9 +77,6 @@ def openImage(image):
             os.remove(ruta_file)
 
     for i in range(200):
-        # print(os.path.exists(os.getcwd() +  f"\\labels\\imagefile{i}.jpg"))
-        # print(os.getcwd() +  f"\\labels\\imagefile{i}.jpg")
-        # print(os.path.exists(os.getcwd()))
         if os.path.exists(os.getcwd() + f"\\labels\\imagefile{i}.jpg"):
             pass
         else:
