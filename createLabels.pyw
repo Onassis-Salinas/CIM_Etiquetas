@@ -264,8 +264,7 @@ def makeInformacion(job, part, description, date):
     draw.text((x[0], y[0]), job, font=font, fill=(0, 0, 0))
     draw.text((x[1], y[1]), part, font=bold, fill=(0, 0, 0))
     draw.text((x[3], y[3]), date, font=font, fill=(0, 0, 0))
-    image.show()
-    # return openImage(image)
+    return openImage(image)
 
 
 def makeCantidadKawasaki():
@@ -276,12 +275,61 @@ def makeMasterPolaris():
     return
 
 
-def makeYamahaInfo():
-    return
+def makeYamahaInfo(job, date):
+    image = Image.open(ls[11][0])
+
+    draw = ImageDraw.Draw(image)
+    date = convertDate(date)
+
+    dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+
+    x = [175, 480]
+    y = [225, 225]
+
+    adjust = [0, 0, 12, 11, 11]
+
+    for i in range(5):
+        draw.text((x[0], y[0] + (i * 292) + adjust[i]), job, font=jobFont, fill=(0, 0, 0))
+        draw.text((x[1], y[1] + (i * 292) + adjust[i]), date, font=dateFont, fill=(0, 0, 0))
+
+    return openImage(image)
 
 
-def makeYamahaInfo2():
-    return
+def makeYamahaInfo2(job, part, description):
+    image = Image.open(ls[12][0])
+
+    draw = ImageDraw.Draw(image)
+
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+    partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 70)
+    descriptionFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+
+    x = [0, 0, 0]
+    y = [185, 10, 90]
+
+    adjust = [0, 0, 12, 11, 11]
+
+    for i in range(5):
+
+        # part
+        x[1] = (image.width - draw.textsize(part, font=partFont)[0]) / 2
+        draw.text((x[1], y[1] + (i * 292) + adjust[i]), part, font=partFont, fill=(0, 0, 0))
+
+        # description
+        lines = textwrap.wrap(description, width=500 // descriptionFont.getsize("A")[0])
+        x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
+        draw.text((x[2], y[2] + (i * 292) + adjust[i]), lines[0], font=descriptionFont, fill=(0, 0, 0))
+        if len(lines) > 1:
+            x[2] = (image.width - draw.textsize(lines[1], font=descriptionFont)[0]) / 2
+            draw.text((x[2], y[2] + (i * 292) + adjust[i] + 40), lines[1], font=descriptionFont, fill=(0, 0, 0))
+
+        # job
+        x[0] = (image.width - draw.textsize(job, font=jobFont)[0]) / 2
+        draw.text((x[0], y[0] + (i * 292) + adjust[i]), job, font=jobFont, fill=(0, 0, 0))
+
+
+    return openImage(image)
 
 
 def makeBastonesFront(job):

@@ -59,15 +59,18 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
         startIndex = text.index("SHIPPING SCHEDULE:")
         for i in range(startIndex, len(text)):  # if there are, it makes a dictionary for each shipping
             if text[i].count("/") == 2 and len(text[i]) < 11:
-                poNumber = 11 if containsNumbers(text[i + 11]) else 10
+                try:
+                    poNumber = 11 if containsNumbers(text[i + 11]) else 10
+                    shipping.append(
+                        {
+                            "quantity": text[i + 4],
+                            "saleOrder": text[i + 1],
+                            "purchaseOrder": text[i + poNumber],
+                        }
+                    )
+                except:
+                    None
 
-                shipping.append(
-                    {
-                        "quantity": text[i + 4],
-                        "saleOrder": text[i + 1],
-                        "purchaseOrder": text[i + poNumber],
-                    }
-                )
 
     # makes a dictionary with all the relevant data and returns it
     data = {"job": job, "date": date, "part": part, "description": description, "shipping": shipping, "quantity": quantity, "amount": amount}
@@ -149,9 +152,9 @@ def PrintLabel(check, jobInfo, label):
     if label == ls[10]:
         makeMasterPolaris(jobInfo["job"])
     if label == ls[11]:
-        makeYamahaInfo(jobInfo["job"])
+        makeYamahaInfo(jobInfo["job"], jobInfo["date"])
     if label == ls[12]:
-        makeYamahaInfo2(jobInfo["job"])
+        makeYamahaInfo2(jobInfo["job"], jobInfo["part"], jobInfo["description"])
     if label == ls[13]:
         makeCommercial(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
     if label == ls[14]:
