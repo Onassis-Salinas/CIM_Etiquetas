@@ -48,7 +48,7 @@ class App(CTk):
 
         # purchase orders
         for i, ship in enumerate(jobInfo["shipping"]):
-            shipButton = CTkButton(self.dataFrame, text=f"Pedido {i+1}", width=8, bg_color="transparent", command=partial(getShippingData, jobInfo, jobInfoAct, i)).grid(row=i + 1, column=6)
+            shipButton = CTkButton(self.labelsFrame, text=f"Pedido {i+1}", width=8, bg_color="transparent", command=partial(getShippingData, jobInfo, jobInfoAct, i)).grid(row=i + 1, column=6)
 
         self.quantity = CTkEntry(self.dataFrame, bg_color="transparent")
         self.quantity.insert(0, str(jobInfoAct["quantity"]))
