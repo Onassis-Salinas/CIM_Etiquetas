@@ -24,8 +24,8 @@ ls = (
     ["img\\Outer Armor.jpg", 2],  # 14
     ["img\\Kawasaki.jpg", 2],  # 15
     ["img\\Yamaha.jpg", 2],  # 16
-    ["img\\BastonesFront.jpg", 2],  # 17
-    ["img\\BastonesBack.jpg", 2],  # 18
+    ["img\\Front.jpg", 2],  # 17
+    ["img\\Back.jpg", 2],  # 18
 )
 
 bcd = (
@@ -92,17 +92,17 @@ def makeInspector():
     return openImage(image)
 
 
-def makeBastones(job):
+def makeBastones(job, text=""):
     image = Image.open("img\\Bastones.jpg")
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype("arial.ttf", 80)
+    font = ImageFont.truetype("arial.ttf", 74)
 
     text_width, text_height = draw.textsize(job, font)
     x = [30, 670]
-    y = [60, 60]
+    y = 65
 
-    draw.text((x[0], y[0]), job, font=font, fill=(0, 0, 0))
-    draw.text((x[1], y[1]), job, font=font, fill=(0, 0, 0))
+    draw.text((x[0], y), job + "  " + text, font=font, fill=(0, 0, 0))
+    draw.text((x[1], y), job + "  " + text, font=font, fill=(0, 0, 0))
 
     return openImage(image)
 
@@ -301,17 +301,16 @@ def makeYamahaInfo2(job, part, description):
 
     draw = ImageDraw.Draw(image)
 
-    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 45)
     partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 70)
     descriptionFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
 
     x = [0, 0, 0]
-    y = [185, 10, 90]
+    y = [195, 30, 100]
 
-    adjust = [0, 0, 12, 11, 11]
+    adjust = [0, 0, 12, 14, 16]
 
     for i in range(5):
-
         # part
         x[1] = (image.width - draw.textsize(part, font=partFont)[0]) / 2
         draw.text((x[1], y[1] + (i * 292) + adjust[i]), part, font=partFont, fill=(0, 0, 0))
@@ -328,16 +327,7 @@ def makeYamahaInfo2(job, part, description):
         x[0] = (image.width - draw.textsize(job, font=jobFont)[0]) / 2
         draw.text((x[0], y[0] + (i * 292) + adjust[i]), job, font=jobFont, fill=(0, 0, 0))
 
-
     return openImage(image)
-
-
-def makeBastonesFront(job):
-    return
-
-
-def makeBastonesBack(job):
-    return
 
 
 def makeCommercial(job, part, description, date):

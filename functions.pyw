@@ -71,7 +71,6 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
                 except:
                     None
 
-
     # makes a dictionary with all the relevant data and returns it
     data = {"job": job, "date": date, "part": part, "description": description, "shipping": shipping, "quantity": quantity, "amount": amount}
     return data
@@ -87,9 +86,9 @@ def containsNumbers(string):  # checks if the array contains number
 def getLabels(part):
     usedLabels = []
     if part[0] == "F":
-        if part == "F5N-U3280-00" or part == "F4Y-U3280-00" or part == "F4Y-U3280-40":  # lleva dos bastones
+        if part == "F5N-U3280-00" or part == "F4Y-U3280-00" or part == "F4T-U3280-01":  # lleva dos bastones
             usedLabels = [ls[0], ls[17], ls[18], ls[2], ls[6], ls[7], ls[8], ls[16]]
-        if part == "F6H-U3280-01" or part == "F6D-U3280-00" or part[:3] == "F6A":  # no lleva baston
+        elif part == "F6H-U3280-01" or part == "F6D-U3280-00" or part[:3] == "F6A":  # no lleva baston
             usedLabels = [ls[0], ls[2], ls[6], ls[7], ls[8], ls[16]]
         else:  # lleva un baston
             usedLabels = [ls[0], ls[1], ls[2], ls[6], ls[7], ls[8], ls[16]]
@@ -123,19 +122,19 @@ def getLabels(part):
 def PrintLabel(check, jobInfo, label):
     if label == ls[0]:
         makeInspector()
-    if label == ls[1]:
+    elif label == ls[1]:
         makeBastones(jobInfo["job"])
-    if label == ls[2]:
+    elif label == ls[2]:
         makeCodigoYamaha(jobInfo["part"], jobInfo["description"], jobInfo["date"], jobInfo["job"])
-    if label == ls[3]:
+    elif label == ls[3]:
         makeCodigoKawasaki(jobInfo["job"])
-    if label == ls[4]:
+    elif label == ls[4]:
         makeCodigoPolaris(jobInfo["job"])
-    if label == ls[5]:
+    elif label == ls[5]:
         makeCodigoChaparral(jobInfo["job"])
-    if label == ls[6]:
+    elif label == ls[6]:
         makeWarning()
-    if label == ls[7]:
+    elif label == ls[7]:
         makeCantidad(
             jobInfo["job"],
             jobInfo["part"],
@@ -145,28 +144,28 @@ def PrintLabel(check, jobInfo, label):
             jobInfo["shipping"]["saleOrder"],
             jobInfo["shipping"]["purchaseOrder"],
         )
-    if label == ls[8]:
+    elif label == ls[8]:
         makeInformacion(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
-    if label == ls[9]:
+    elif label == ls[9]:
         makeCantidadKawasaki(jobInfo["job"])
-    if label == ls[10]:
+    elif label == ls[10]:
         makeMasterPolaris(jobInfo["job"])
-    if label == ls[11]:
+    elif label == ls[11]:
         makeYamahaInfo(jobInfo["job"], jobInfo["date"])
-    if label == ls[12]:
+    elif label == ls[12]:
         makeYamahaInfo2(jobInfo["job"], jobInfo["part"], jobInfo["description"])
-    if label == ls[13]:
+    elif label == ls[13]:
         makeCommercial(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
-    if label == ls[14]:
+    elif label == ls[14]:
         makeOuterArmor(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
-    if label == ls[15]:
+    elif label == ls[15]:
         makeKawasaki(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
-    if label == ls[16]:
+    elif label == ls[16]:
         makeYamaha(jobInfo["job"], jobInfo["part"], jobInfo["description"], jobInfo["date"])
-    if label == ls[17]:
-        makeBastonesFront(jobInfo["job"])
-    if label == ls[18]:
-        makeBastonesBack(jobInfo["job"])
+    elif label == ls[17]:
+        makeBastones(jobInfo["job"], "FRONT")
+    elif label == ls[18]:
+        makeBastones(jobInfo["job"], "BACK")
 
 
 # some general functions for printLabels use
