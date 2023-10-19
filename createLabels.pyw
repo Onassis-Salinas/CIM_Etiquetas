@@ -171,23 +171,23 @@ def makeWarning():
 
 
 def makeCantidad(job, part, description, date, quantity, so, po):
+    image = Image.open(ls[7][0])
+    draw = ImageDraw.Draw(image)
+
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
+    partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 100)
+    descriptionFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
+    dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 70)
+    orderFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 60)
+
     if part not in ["P0632-02", "P6031-02", "P0633-02"]:
-        image = Image.open("img\\Cantidad.jpg")
-        draw = ImageDraw.Draw(image)
-
-        jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
-        partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 100)
-        descriptionFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 50)
-        dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 70)
-        orderFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 60)
-
         x = [165, 0, 0, 1100, 870, 150, 1000]
         y = [120, 260, 420, 50, 625, 720, 720]
 
         partWidth = draw.textsize(part, font=partFont)[0]
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(description, width=1200 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[0])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -203,22 +203,13 @@ def makeCantidad(job, part, description, date, quantity, so, po):
 
         return openImage(image)
     else:
-        image = Image.open("img\\Cantidad.jpg")
-        draw = ImageDraw.Draw(image)
-
-        jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
-        partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 100)
-        descriptionFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 50)
-        dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 70)
-        orderFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 60)
-
         x = [165, 0, 0, 1100, 870, 150, 1000, 0]
         y = [120, 225, 480, 50, 625, 720, 720, 355]
 
         partWidth = draw.textsize(part, font=partFont)[0]
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(description, width=1200 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[0])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -254,7 +245,7 @@ def makeInformacion(job, part, description, date):
     partWidth = draw.textsize(part, font=bold)[0]
     x[1] = (image.width - partWidth) / 2
 
-    lines = textwrap.wrap(description, width=1200 // bold1.getsize("A")[0])
+    lines = textwrap.wrap(description, width=1300 // bold1.getsize("A")[0])
     x[2] = (image.width - draw.textsize(lines[0], font=bold1)[0]) / 2
     draw.text((x[2], y[2]), lines[0], font=bold1, fill=(0, 0, 0))
     if len(lines) > 1:

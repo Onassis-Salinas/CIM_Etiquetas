@@ -6,7 +6,7 @@ ls = getLs()  # obtains the labels from createLabels.pyw
 
 
 def getJobData(pdfPath):  # receives a pdf and return the relevant data
-    # opens the pdf
+    # opens the
     pdfFile = open(pdfPath, "rb")
     pdfReader = pdf.PdfReader(pdfFile)
 
@@ -43,9 +43,15 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
         for i in range(boxIndex, boxIndex + 10):
             if re.match("^-?\d*\.?\d+$", text[i]):
                 quantity = round(amount / float(text[i]))
+                print(part[:3])
+
                 break
     else:
         quantity = 0
+        if part[0] == "F":
+            quantity = 20
+        if part[:3] == "F6H" or part[:3] == "F6A":
+            quantity = 12
 
     descriptionIndex = text.index("Description:")
     description = text[descriptionIndex + 1]
@@ -165,7 +171,7 @@ def PrintLabel(check, jobInfo, label):
     elif label == ls[17]:
         makeBastones(jobInfo["job"], "FRONT")
     elif label == ls[18]:
-        makeBastones(jobInfo["job"], "BACK")
+        makeBastones(jobInfo["job"], "REAR")
 
 
 # some general functions for printLabels use
