@@ -133,7 +133,7 @@ def makeCodigoYamaha(part, description, date, job):
 
     draw.text((x[0], y[0]), part, font=partFont, fill=(0, 0, 0))
 
-    lines = textwrap.wrap(description, width=480 // descriptionFont.getsize("A")[0])
+    lines = textwrap.wrap(description, width=480 // descriptionFont.getsize("A")[2])
     draw.text((x[1], y[1]), lines[0], font=descriptionFont, fill=(0, 0, 0))
     if len(lines) > 1:
         y[1] += 25
@@ -187,7 +187,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         partWidth = draw.textsize(part, font=partFont)[0]
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[2])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -209,7 +209,7 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         partWidth = draw.textsize(part, font=partFont)[0]
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[2])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -245,7 +245,7 @@ def makeInformacion(job, part, description, date):
     partWidth = draw.textsize(part, font=bold)[0]
     x[1] = (image.width - partWidth) / 2
 
-    lines = textwrap.wrap(description, width=1300 // bold1.getsize("A")[0])
+    lines = textwrap.wrap(description, width=1300 // bold1.getsize("A")[2])
     x[2] = (image.width - draw.textsize(lines[0], font=bold1)[0]) / 2
     draw.text((x[2], y[2]), lines[0], font=bold1, fill=(0, 0, 0))
     if len(lines) > 1:
@@ -307,7 +307,7 @@ def makeYamahaInfo2(job, part, description):
         draw.text((x[1], y[1] + (i * 292) + adjust[i]), part, font=partFont, fill=(0, 0, 0))
 
         # description
-        lines = textwrap.wrap(description, width=500 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=500 // descriptionFont.getsize("A")[2])
         x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
         draw.text((x[2], y[2] + (i * 292) + adjust[i]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
@@ -337,7 +337,7 @@ def makeCommercial(job, part, description, date):
         if i == 1:
             y = sumArray(y, 678)
 
-        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[2])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))
@@ -365,7 +365,7 @@ def makeOuterArmor(job, part, description, date):
         if i == 1:
             y = sumArray(y, 753)
 
-        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[2])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))
@@ -393,7 +393,7 @@ def makeKawasaki(job, part, description, date):
         if i == 1:
             y = sumArray(y, 622)
 
-        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getbbox("A")[2])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))
@@ -421,7 +421,7 @@ def makeYamaha(job, part, description, date):
         if i == 1:
             y = sumArray(y, 720)
 
-        lines = textwrap.wrap(description, width=1000 // bold1.getsize("A")[0])
+        lines = textwrap.wrap(description, width=1000 // bold1.getbbox("A")[2])
         draw.text((x[2], y[2]), lines[0], font=bold1, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=bold1, fill=(0, 0, 0))
