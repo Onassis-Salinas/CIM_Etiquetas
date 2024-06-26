@@ -97,7 +97,7 @@ def makeBastones(job, text=""):
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype("arial.ttf", 74)
 
-    text_width, text_height = draw.textsize(job, font)
+    text_width = draw.textlength(job, font)
     x = [30, 670]
     y = 65
 
@@ -133,7 +133,7 @@ def makeCodigoYamaha(part, description, date, job):
 
     draw.text((x[0], y[0]), part, font=partFont, fill=(0, 0, 0))
 
-    lines = textwrap.wrap(description, width=480 // descriptionFont.getsize("A")[2])
+    lines = textwrap.wrap(description, width=480 // descriptionFont.getbbox("A")[2])
     draw.text((x[1], y[1]), lines[0], font=descriptionFont, fill=(0, 0, 0))
     if len(lines) > 1:
         y[1] += 25
@@ -143,7 +143,7 @@ def makeCodigoYamaha(part, description, date, job):
     draw.text((x[3], y[3]), "1 PC.", font=partFont, fill=(0, 0, 0))
     draw.text((x[5], y[5]), job, font=jobFont, fill=(0, 0, 0))
 
-    width = draw.textsize("MADE IN MEXICO", font=madeFont)[0]
+    width = draw.textlength("MADE IN MEXICO", font=madeFont)
     draw.text(
         (((550 - width) / 2 + 20), y[4]),
         "MADE IN MEXICO",
@@ -180,40 +180,18 @@ def makeCantidad(job, part, description, date, quantity, so, po):
     dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 70)
     orderFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 60)
 
-    if part not in ["P0632-02", "P6031-02", "P0633-02"]:
-        x = [165, 0, 0, 1100, 870, 150, 1000]
-        y = [120, 260, 420, 50, 625, 720, 720]
-
-        partWidth = draw.textsize(part, font=partFont)[0]
-        x[1] = (image.width - partWidth) / 2
-
-        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[2])
-        x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
-        draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
-        if len(lines) > 1:
-            x[2] = (image.width - draw.textsize(lines[1], font=descriptionFont)[0]) / 2
-            draw.text((x[2], y[2] + 60), lines[1], font=descriptionFont, fill=(0, 0, 0))
-
-        draw.text((x[0], y[0]), job, font=jobFont, fill=(0, 0, 0))
-        draw.text((x[1], y[1]), part, font=partFont, fill=(0, 0, 0))
-        draw.text((x[3], y[3]), date, font=dateFont, fill=(0, 0, 0))
-        draw.text((x[4], y[4]), quantity, font=dateFont, fill=(0, 0, 0))
-        draw.text((x[5], y[5]), so, font=orderFont, fill=(0, 0, 0))
-        draw.text((x[6], y[6]), po, font=orderFont, fill=(0, 0, 0))
-
-        return openImage(image)
-    else:
+    if part in ["P0632-02", "P6031-02", "P0633-02"] or (part[0] == "W" or part[0] == "9"):
         x = [165, 0, 0, 1100, 870, 150, 1000, 0]
         y = [120, 225, 480, 50, 625, 720, 720, 355]
 
-        partWidth = draw.textsize(part, font=partFont)[0]
+        partWidth = draw.textlength(part, font=partFont)
         x[1] = (image.width - partWidth) / 2
 
-        lines = textwrap.wrap(description, width=1300 // descriptionFont.getsize("A")[2])
-        x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
+        lines = textwrap.wrap(description, width=1300 // descriptionFont.getbbox("A")[2])
+        x[2] = (image.width - draw.textlength(lines[0], font=descriptionFont)) / 2
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
-            x[2] = (image.width - draw.textsize(lines[1], font=descriptionFont)[0]) / 2
+            x[2] = (image.width - draw.textlength(lines[1], font=descriptionFont)) / 2
             draw.text((x[2], y[2] + 60), lines[1], font=descriptionFont, fill=(0, 0, 0))
 
         draw.text((x[0], y[0]), job, font=jobFont, fill=(0, 0, 0))
@@ -230,6 +208,28 @@ def makeCantidad(job, part, description, date, quantity, so, po):
         image.paste(barcode1, (int(x[7]), int(y[7])))
 
         return openImage(image)
+    else:
+        x = [165, 0, 0, 1100, 870, 150, 1000]
+        y = [120, 260, 420, 50, 625, 720, 720]
+
+        partWidth = draw.textlength(part, font=partFont)
+        x[1] = (image.width - partWidth) / 2
+
+        lines = textwrap.wrap(description, width=1300 // descriptionFont.getbbox("A")[2])
+        x[2] = (image.width - draw.textlength(lines[0], font=descriptionFont)) / 2
+        draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
+        if len(lines) > 1:
+            x[2] = (image.width - draw.textlength(lines[1], font=descriptionFont)) / 2
+            draw.text((x[2], y[2] + 60), lines[1], font=descriptionFont, fill=(0, 0, 0))
+
+        draw.text((x[0], y[0]), job, font=jobFont, fill=(0, 0, 0))
+        draw.text((x[1], y[1]), part, font=partFont, fill=(0, 0, 0))
+        draw.text((x[3], y[3]), date, font=dateFont, fill=(0, 0, 0))
+        draw.text((x[4], y[4]), quantity, font=dateFont, fill=(0, 0, 0))
+        draw.text((x[5], y[5]), so, font=orderFont, fill=(0, 0, 0))
+        draw.text((x[6], y[6]), po, font=orderFont, fill=(0, 0, 0))
+
+        return openImage(image)
 
 
 def makeInformacion(job, part, description, date):
@@ -242,24 +242,20 @@ def makeInformacion(job, part, description, date):
     x = [740, 0, 0, 740]
     y = [650, 200, 380, 750]
 
-    partWidth = draw.textsize(part, font=bold)[0]
+    partWidth = draw.textlength(part, font=bold)
     x[1] = (image.width - partWidth) / 2
 
-    lines = textwrap.wrap(description, width=1300 // bold1.getsize("A")[2])
-    x[2] = (image.width - draw.textsize(lines[0], font=bold1)[0]) / 2
+    lines = textwrap.wrap(description, width=1300 // bold1.getbbox("A")[2])
+    x[2] = (image.width - draw.textlength(lines[0], font=bold1)) / 2
     draw.text((x[2], y[2]), lines[0], font=bold1, fill=(0, 0, 0))
     if len(lines) > 1:
-        x[2] = (image.width - draw.textsize(lines[1], font=bold1)[0]) / 2
+        x[2] = (image.width - draw.textlength(lines[1], font=bold1)) / 2
         draw.text((x[2], y[2] + 60), lines[1], font=bold1, fill=(0, 0, 0))
 
     draw.text((x[0], y[0]), job, font=font, fill=(0, 0, 0))
     draw.text((x[1], y[1]), part, font=bold, fill=(0, 0, 0))
     draw.text((x[3], y[3]), date, font=font, fill=(0, 0, 0))
     return openImage(image)
-
-
-def makeCantidadKawasaki():
-    return
 
 
 def makeMasterPolaris():
@@ -303,19 +299,19 @@ def makeYamahaInfo2(job, part, description):
 
     for i in range(5):
         # part
-        x[1] = (image.width - draw.textsize(part, font=partFont)[0]) / 2
+        x[1] = (image.width - draw.textlength(part, font=partFont)) / 2
         draw.text((x[1], y[1] + (i * 292) + adjust[i]), part, font=partFont, fill=(0, 0, 0))
 
         # description
-        lines = textwrap.wrap(description, width=500 // descriptionFont.getsize("A")[2])
-        x[2] = (image.width - draw.textsize(lines[0], font=descriptionFont)[0]) / 2
+        lines = textwrap.wrap(description, width=500 // descriptionFont.getbbox("A")[2])
+        x[2] = (image.width - draw.textlength(lines[0], font=descriptionFont)) / 2
         draw.text((x[2], y[2] + (i * 292) + adjust[i]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
-            x[2] = (image.width - draw.textsize(lines[1], font=descriptionFont)[0]) / 2
+            x[2] = (image.width - draw.textlength(lines[1], font=descriptionFont)) / 2
             draw.text((x[2], y[2] + (i * 292) + adjust[i] + 40), lines[1], font=descriptionFont, fill=(0, 0, 0))
 
         # job
-        x[0] = (image.width - draw.textsize(job, font=jobFont)[0]) / 2
+        x[0] = (image.width - draw.textlength(job, font=jobFont)) / 2
         draw.text((x[0], y[0] + (i * 292) + adjust[i]), job, font=jobFont, fill=(0, 0, 0))
 
     return openImage(image)
@@ -337,7 +333,7 @@ def makeCommercial(job, part, description, date):
         if i == 1:
             y = sumArray(y, 678)
 
-        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[2])
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getbbox("A")[2])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))
@@ -365,7 +361,7 @@ def makeOuterArmor(job, part, description, date):
         if i == 1:
             y = sumArray(y, 753)
 
-        lines = textwrap.wrap(description, width=1000 // descriptionFont.getsize("A")[2])
+        lines = textwrap.wrap(description, width=1000 // descriptionFont.getbbox("A")[2])
         draw.text((x[2], y[2]), lines[0], font=descriptionFont, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=descriptionFont, fill=(0, 0, 0))

@@ -16,7 +16,12 @@ class App(CTk):
         self.title = CTkLabel(self, text="Ingresa el Job:", fg_color="transparent").pack()
         self.jobEntry = CTkEntry(self)
         self.jobEntry.pack()
-        self.jobButton = CTkButton(self, text="Imprimir", command=self.obtainLabels).pack()
+
+        self.buttonFrame = CTkFrame(self, bg_color="transparent", fg_color="transparent")
+        self.buttonFrame.pack(pady=5)
+
+        self.jobButton = CTkButton(self.buttonFrame, text="Imprimir", command=self.obtainLabels).grid(row=0, column=0)
+        self.allButton = CTkButton(self.buttonFrame, text="+", command=self.obtainAllLabels, width=15).grid(row=0, column=1, padx=5)
 
         self.tabview = CTkTabview(master=self, width=550)
         self.tabview.pack(padx=20, pady=20)
@@ -26,14 +31,17 @@ class App(CTk):
         PrintLabel(check, jobInfo, label)
         return
 
-    def obtainLabels(self):
+    def obtainAllLabels(self):
+        self.obtainLabels(True)
+
+    def obtainLabels(self, all = False):
         job = self.jobEntry.get()
         pdfPath = os.path.abspath(__file__)
         pdfPath = os.path.dirname(pdfPath)
         pdfPath += f"\\JOBS\\Job {job}.pdf"
 
         jobInfo = getJobData(pdfPath)
-        labels = getLabels(jobInfo["part"])
+        labels = getLabels(jobInfo["part"], jobInfo["bastones"], all)
 
         # Containers
         self.tabview.add(jobInfo["job"])

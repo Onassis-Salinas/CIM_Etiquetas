@@ -11,8 +11,13 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     pdfReader = pdf.PdfReader(pdfFile)
 
     # converts the pdf to a string
+
     text = ""
-    text = pdfReader.pages[0].extract_text() + pdfReader.pages[1].extract_text() + pdfReader.pages[2].extract_text()
+
+    for page_num in range(len(pdfReader.pages)):
+        page = pdfReader.pages[page_num]
+        text += page.extract_text()
+    
     pdfFile.close()
 
     text = text.split("\n")  # divides the srting
@@ -22,6 +27,9 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     part = text[text.index("Part:") + 1]
     date = text[text.index("Due\xa0Date:") + 1]
 
+    bastones = int(float(text[text.index("P65-1010") + 2]) / 25)
+
+    print(bastones)
     amountIndex = text.index("For Order")
     for i in range(amountIndex, amountIndex + 10):
         try:
@@ -78,26 +86,29 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
                     None
 
     # makes a dictionary with all the relevant data and returns it
-    data = {"job": job, "date": date, "part": part, "description": description, "shipping": shipping, "quantity": quantity, "amount": amount}
+    data = {"job": job, "date": date, "part": part, "description": description, "shipping": shipping, "quantity": quantity, "amount": amount, "bastones": bastones}
     return data
 
 
-def containsNumbers(string):  # checks if the array contains number
+def containsNumbers(string):
     for char in string:
         if char.isdigit():
             return True
     return False
 
 
-def getLabels(part):
+def getLabels(part, bastones, all = False):
     usedLabels = []
-    if part[0] == "F":
-        if part == "F5N-U3280-00" or part == "F4Y-U3280-00" or part == "F4T-U3280-01":  # lleva dos bastones
+
+    if(all):
+        usedLabels = ls
+    elif part[0] == "F":
+        if bastones == 2:  
             usedLabels = [ls[0], ls[17], ls[18], ls[2], ls[6], ls[7], ls[8], ls[16]]
-        elif part == "F6H-U3280-01" or part == "F6D-U3280-00" or part[:3] == "F6A":  # no lleva baston
+        elif bastones == 1: 
+            usedLabels = [ ls[0], ls[1], ls[2], ls[6], ls[7], ls[8], ls[16]]
+        else: 
             usedLabels = [ls[0], ls[2], ls[6], ls[7], ls[8], ls[16]]
-        else:  # lleva un baston
-            usedLabels = [ls[0], ls[1], ls[2], ls[6], ls[7], ls[8], ls[16]]
 
     elif part[0] == "P":
         usedLabels = [ls[7], ls[16]]
@@ -120,7 +131,7 @@ def getLabels(part):
     elif part[:2] == "28":
         usedLabels = [ls[4], ls[10], ls[13]]
     elif part[0] == "W" or part[0] == "9":
-        usedLabels = [ls[3], ls[9], ls[15]]
+        usedLabels = [ls[3], ls[7], ls[15]]
 
     return usedLabels
 
