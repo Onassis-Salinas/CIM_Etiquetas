@@ -1,0 +1,6 @@
+pillow
+customtkinter
+functools
+python-barcode
+PyPDF2
+textwrap
