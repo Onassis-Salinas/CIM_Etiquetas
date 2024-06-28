@@ -32,11 +32,11 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     except ValueError:
         bastones = 0
 
-    print(bastones)
+    print(text)
     amountIndex = text.index("For Order")
-    for i in range(amountIndex, amountIndex + 10):
+    for i in range(amountIndex, amountIndex + 20):
         try:
-            if float(text[i].replace(",", "")) > 1:
+            if float(text[i].replace(",", "")) >= 1:
                 amount = float(text[i].replace(",", ""))
                 break
         except:

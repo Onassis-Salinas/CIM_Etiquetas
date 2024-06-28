@@ -2,4 +2,4 @@ test.py
 __pycache__
 JOBS/*
 labels/*
-barcodes/*
+barcodes
