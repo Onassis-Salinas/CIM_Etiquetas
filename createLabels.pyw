@@ -10,9 +10,9 @@ ls = (
     ["img\\Inspector.jpg", 2],  # 0
     ["img\\Bastones.jpg", 2],  # 1
     ["img\\Codigo Yamaha.jpg", 1],  # 2
-    ["img\\Codigo Kawasaki.jpg", 1],  # 3
-    ["img\\Codigo Polaris.jpg", 1],  # 4
-    ["img\\Codigo Chaparral.jpg", 1],  # 5
+    ["img\\Codigo Kawasaki.jpg", 3],  # 3
+    ["img\\Codigo Polaris.jpg", 3],  # 4
+    ["img\\Codigo Chaparral.jpg", 3],  # 5
     ["img\\Warning.jpg", 1],  # 6
     ["img\\Cantidad.jpg", 1],  # 7
     ["img\\Informacion.jpg", 0.5],  # 8
@@ -153,16 +153,134 @@ def makeCodigoYamaha(part, description, date, job):
     return openImage(image)
 
 
-def makeCodigoKawasaki():
-    return
+def makeCodigoKawasaki(part, description, date, job, po):
+    image = Image.open(ls[3][0])
+    draw = ImageDraw.Draw(image)
+
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+    partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
+    descriptionFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 40)
+    dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+
+    x = [120, 0, 0, 710, 0, 710]
+    y = [470, 130, 360, 65, 200, 470]
+
+    adjust = [0,0,0]
+    height = 520
+
+    partWidth = draw.textlength(part, font=partFont)
+    x[1] = (image.width - partWidth) / 2
+
+    lines = textwrap.wrap(description, width=800 // descriptionFont.getbbox("A")[2])
+    x[2] = (image.width - draw.textlength(lines[0], font=descriptionFont)) / 2
+
+    barcode.Code39(part.replace("-", ""), writer=ImageWriter(), add_checksum=False).save(bcd[2][:-4], options={"write_text": False})
+    x[4] = (image.width - 700) / 2
+    barcode1 = Image.open(bcd[2])
+    barcode1 = barcode1.resize((700, 150))
+
+    for i in range(3):
+        draw.text((x[2], y[2] + (height * i) + adjust[i]), lines[0], font=descriptionFont, fill=1)
+        if len(lines) > 1:
+            secondLine = (image.width - draw.textlength(lines[1], font=descriptionFont)) / 2
+            draw.text((secondLine, y[2] + (height * i) + adjust[i] + 45), lines[1], font=descriptionFont, fill=1)
+
+        draw.text((x[0], y[0] + (height * i) + adjust[i]), job, font=jobFont, fill=1)
+        draw.text((x[5], y[5] + (height * i) + adjust[i]), po, font=jobFont, fill=1)
+        draw.text((x[1], y[1] + (height * i) + adjust[i]), part, font=partFont, fill=1)
+        draw.text((x[3], y[3] + (height * i) + adjust[i]), date, font=dateFont, fill=1)
 
 
-def makeCodigoPolaris():
-    return
+        image.paste(barcode1, (int(x[4]), int(y[4] + (height * i) + adjust[i])))
+
+    return openImage(image)
 
 
-def makeCodigoChaparral():
-    return
+def makeCodigoPolaris(part, description, date, job):
+    image = Image.open(ls[4][0])
+    draw = ImageDraw.Draw(image)
+
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+    partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
+    descriptionFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 40)
+    dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+
+    x = [120, 0, 0, 710, 0]
+    y = [65, 130, 400, 65, 220]
+
+    adjust = [0,0,0]
+    height = 520
+
+    partWidth = draw.textlength(part, font=partFont)
+    x[1] = (image.width - partWidth) / 2
+
+    lines = textwrap.wrap(description, width=800 // descriptionFont.getbbox("A")[2])
+    x[2] = (image.width - draw.textlength(lines[0], font=descriptionFont)) / 2
+
+    barcode.Code39(part.replace("-", ""), writer=ImageWriter(), add_checksum=False).save(bcd[2][:-4], options={"write_text": False})
+    x[4] = (image.width - 700) / 2
+    barcode1 = Image.open(bcd[2])
+    barcode1 = barcode1.resize((700, 150))
+
+    for i in range(3):
+        draw.text((x[2], y[2] + (height * i) + adjust[i]), lines[0], font=descriptionFont, fill=1)
+        if len(lines) > 1:
+            secondLine = (image.width - draw.textlength(lines[1], font=descriptionFont)) / 2
+            draw.text((secondLine, y[2] + (height * i) + adjust[i] + 45), lines[1], font=descriptionFont, fill=1)
+
+        draw.text((x[0], y[0] + (height * i) + adjust[i]), job, font=jobFont, fill=1)
+        draw.text((x[1], y[1] + (height * i) + adjust[i]), part, font=partFont, fill=1)
+        draw.text((x[3], y[3] + (height * i) + adjust[i]), date, font=dateFont, fill=1)
+
+
+        image.paste(barcode1, (int(x[4]), int(y[4] + (height * i) + adjust[i])))
+
+    return openImage(image)
+
+
+
+def makeCodigoChaparral(part, description, date, job, po, so):
+    image = Image.open(ls[5][0])
+    draw = ImageDraw.Draw(image)
+
+    jobFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+    partFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 60)
+    descriptionFont = ImageFont.truetype("swis\\Swiss721CondensedBT.ttf", 40)
+    dateFont = ImageFont.truetype("swis\\Swiss721BoldCondensedBT.ttf", 40)
+
+    x = [120, 0, 0, 670, 0, 660, 140]
+    y = [80, 130, 330, 80, 200, 440, 440]
+
+    adjust = [0,0,0]
+    height = 520
+
+    partWidth = draw.textlength(part, font=partFont)
+    x[1] = (image.width - partWidth) / 2
+
+    lines = textwrap.wrap(description, width=800 // descriptionFont.getbbox("A")[2])
+    x[2] = (image.width - draw.textlength(lines[0], font=descriptionFont)) / 2
+
+    barcode.Code39(part.replace("-", ""), writer=ImageWriter(), add_checksum=False).save(bcd[2][:-4], options={"write_text": False})
+    x[4] = (image.width - 700) / 2
+    barcode1 = Image.open(bcd[2])
+    barcode1 = barcode1.resize((700, 130))
+
+    for i in range(3):
+        draw.text((x[2], y[2] + (height * i) + adjust[i]), lines[0], font=descriptionFont, fill=1)
+        if len(lines) > 1:
+            secondLine = (image.width - draw.textlength(lines[1], font=descriptionFont)) / 2
+            draw.text((secondLine, y[2] + (height * i) + adjust[i] + 45), lines[1], font=descriptionFont, fill=1)
+
+        draw.text((x[0], y[0] + (height * i) + adjust[i]), job, font=jobFont, fill=1)
+        draw.text((x[5], y[5] + (height * i) + adjust[i]), po, font=jobFont, fill=1)
+        draw.text((x[6], y[6] + (height * i) + adjust[i]), so, font=jobFont, fill=1)
+        draw.text((x[1], y[1] + (height * i) + adjust[i]), part, font=partFont, fill=1)
+        draw.text((x[3], y[3] + (height * i) + adjust[i]), date, font=dateFont, fill=1)
+
+
+        image.paste(barcode1, (int(x[4]), int(y[4] + (height * i) + adjust[i])))
+
+    return openImage(image)
 
 
 def makeWarning():
@@ -417,7 +535,7 @@ def makeYamaha(job, part, description, date):
         if i == 1:
             y = sumArray(y, 720)
 
-        lines = textwrap.wrap(description, width=1000 // bold1.getbbox("A")[2])
+        lines = textwrap.wrap(description, width=900 // bold1.getbbox("A")[2])
         draw.text((x[2], y[2]), lines[0], font=bold1, fill=(0, 0, 0))
         if len(lines) > 1:
             draw.text((x[2], y[2] + 55), lines[1], font=bold1, fill=(0, 0, 0))

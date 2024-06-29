@@ -84,6 +84,27 @@ class App(CTk):
                         buttonTextAct = jobInfoAct["shipping"]["quantity"]
 
                     self.printButton = CTkButton(self.labelsFrame, text=buttonTextAct, bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4 + j, column=i, padx=5, pady=5)
+            elif self.labelText == "Codigo Chaparral" or self.labelText == "Codigo Kawasaki":
+                self.label1 = CTkLabel(self.labelsFrame, bg_color="transparent", text=self.labelText, width=14).grid(row=2, column=i)
+
+                if len(jobInfo["shipping"]) == 0:
+                    jobInfoAct = copy.deepcopy(jobInfo)
+                    jobInfoAct["shipping"] = {"saleOrder": "", "purchaseOrder": "", "quantity": ""}
+                    self.printButton = CTkButton(self.labelsFrame, text=buttonText, bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4, column=i, padx=5, pady=5)
+
+                for j in range(len(jobInfo["shipping"])):
+                    jobInfoAct = copy.deepcopy(jobInfo)
+                    jobInfoAct["shipping"] = {"saleOrder": "", "purchaseOrder": "", "quantity": ""}
+
+                    if jobInfo["shipping"] != []:
+                        jobInfoAct["shipping"] = jobInfo["shipping"][j]
+
+                    if jobInfoAct["shipping"]["quantity"] == "":
+                        buttonTextAct = jobInfo["amount"]
+                    else:
+                        buttonTextAct = jobInfoAct["shipping"]["quantity"]
+
+                    self.printButton = CTkButton(self.labelsFrame, text=buttonTextAct, bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfoAct, label, self.quantity)).grid(row=4 + j, column=i, padx=5, pady=5)
             else:
                 self.label1 = CTkLabel(self.labelsFrame, bg_color="transparent", text=self.labelText, width=14).grid(row=2, column=i)
                 self.printButton = CTkButton(self.labelsFrame, text=buttonText, bg_color="transparent", width=14, command=partial(self.onClick, False, jobInfo, label, self.quantity)).grid(row=4, column=i, padx=5, pady=5)

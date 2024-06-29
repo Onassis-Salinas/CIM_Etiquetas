@@ -27,7 +27,10 @@ def getJobData(pdfPath):  # receives a pdf and return the relevant data
     part = text[text.index("Part:") + 1]
     date = text[text.index("Due\xa0Date:") + 1]
 
-    bastones = int(float(text[text.index("P65-1010") + 2]) / 25)
+    try:
+        bastones = int(float(text[text.index("P65-1010") + 2]) / 25)
+    except ValueError:
+        bastones = 0
 
     print(bastones)
     amountIndex = text.index("For Order")
@@ -144,11 +147,24 @@ def PrintLabel(check, jobInfo, label):
     elif label == ls[2]:
         makeCodigoYamaha(jobInfo["part"], jobInfo["description"], jobInfo["date"], jobInfo["job"])
     elif label == ls[3]:
-        makeCodigoKawasaki(jobInfo["job"])
+        makeCodigoKawasaki(
+            jobInfo["part"],
+            jobInfo["description"],
+            jobInfo["date"],
+            jobInfo["job"],
+            jobInfo["shipping"]["purchaseOrder"],
+        )
     elif label == ls[4]:
-        makeCodigoPolaris(jobInfo["job"])
+        makeCodigoPolaris(jobInfo["part"], jobInfo["description"], jobInfo["date"], jobInfo["job"])
     elif label == ls[5]:
-        makeCodigoChaparral(jobInfo["job"])
+        makeCodigoChaparral(
+            jobInfo["part"],
+            jobInfo["description"],
+            jobInfo["date"],
+            jobInfo["job"],
+            jobInfo["shipping"]["purchaseOrder"],
+            jobInfo["shipping"]["saleOrder"],
+        )
     elif label == ls[6]:
         makeWarning()
     elif label == ls[7]:
