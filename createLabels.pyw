@@ -113,8 +113,8 @@ def makeCodigoYamaha(part, description, date, job):
     barcode.Code39("1", writer=ImageWriter(), add_checksum=False).save(bcd[1][:-4], options={"write_text": False})
 
     barcode1 = Image.open(bcd[0])
-    barcode1 = barcode1.resize((550, 130))
-    image.paste(barcode1, (20, 240))
+    barcode1 = barcode1.resize((590, 120))
+    image.paste(barcode1, (-5, 240))
     barcode2 = Image.open(bcd[1])
     barcode2 = barcode2.resize((130, 70))
     image.paste(barcode2, (815, 125))
